@@ -130,7 +130,7 @@ void TaschenrechnerW::istGleich(){
 
     else if(ui->minus->isChecked()){
         this->ergebnis=this->ersteZahl-this->LCDZahl;
-        ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
+        ui->Ausgabe->setText(QString::number(this->ergebnis,'g',13));
         ui->minus->setChecked(false);
 
     }
