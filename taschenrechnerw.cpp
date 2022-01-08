@@ -12,7 +12,9 @@ TaschenrechnerW::TaschenrechnerW(QWidget *parent): QMainWindow(parent)
 {
     LCDZahl=0;
     ersteZahl=0;
+    zweiteZahl=0;
     trackButton=false;
+    operation="";
     ergebnis=0;
 
 
@@ -36,6 +38,8 @@ TaschenrechnerW::TaschenrechnerW(QWidget *parent): QMainWindow(parent)
 
     connect(ui->Vorzeichen,SIGNAL(released()),this,SLOT(ausgabeManipulation()));
     connect(ui->del,SIGNAL(released()),this,SLOT(ausgabeManipulation()));
+    connect(ui->dezi,SIGNAL(released()),this,SLOT(ausgabeManipulation()));
+
     connect(ui->gleich,SIGNAL(released()),this,SLOT(istGleich()));
 
     //mathematische Operationen
@@ -73,6 +77,7 @@ void TaschenrechnerW::num_pressed()
      }
      else{
         this->LCDZahl=(ui->Ausgabe->text()+button->text()).toDouble();
+        this->trackButton=false;
       }
 
 
@@ -81,17 +86,6 @@ void TaschenrechnerW::num_pressed()
 }
 
 
-
-
-//Dezimalzeichen in Zahl einfügen
-
-void TaschenrechnerW::on_dezi_released()
-{
-    QRegExp rx("[.]");
-    if(-1==rx.indexIn(ui->Ausgabe->text()))
-        ui->Ausgabe->setText(ui->Ausgabe->text()+".");
-
-}
 
 void TaschenrechnerW::ausgabeManipulation()
 {
@@ -102,53 +96,58 @@ void TaschenrechnerW::ausgabeManipulation()
             this->LCDZahl=-1*(ui->Ausgabe->text()).toDouble();
             ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
         }
-
-       if(button->text()=="Del"){
+        else if(button->text()=="Del"){
 
             this->LCDZahl=0;
             this->ersteZahl=0;
+            this->zweiteZahl=0;
+            this->ergebnis=0;
             ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
             ui->plus->setChecked(false);
             ui->minus->setChecked(false);
             ui->mal->setChecked(false);
             ui->teil->setChecked(false);
         }
+       else if(button->text()=="."){
+
+           QRegExp rx("[.]");
+           if(-1==rx.indexIn(ui->Ausgabe->text()))
+           ui->Ausgabe->setText(ui->Ausgabe->text()+".");
+
+       }
 
 
 }
 
+
 void TaschenrechnerW::istGleich(){
 
-
+    this->zweiteZahl=ui->Ausgabe->text().toDouble();
 
     if(ui->plus->isChecked()){
-          this->ergebnis=this->ersteZahl+this->LCDZahl;
-          ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
-
+          this->ergebnis=this->ersteZahl+this->zweiteZahl;
           ui->plus->setChecked(false);
     }
 
     else if(ui->minus->isChecked()){
-        this->ergebnis=this->ersteZahl-this->LCDZahl;
-        ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
+        this->ergebnis=this->ergebnis=this->ersteZahl-this->zweiteZahl;
         ui->minus->setChecked(false);
 
     }
 
     else if(ui->mal->isChecked()){
-        this->ergebnis=this->ersteZahl*this->LCDZahl;
-        ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
+        this->ergebnis=this->ergebnis=this->ersteZahl*this->zweiteZahl;
         ui->mal->setChecked(false);
 
     }
 
     else if(ui->teil->isChecked()){
-        this->ergebnis=this->ersteZahl/this->LCDZahl;
-        ui->Ausgabe->setText(QString::number(this->ergebnis,'g',13));
+        this->ergebnis=this->ergebnis=this->ersteZahl/this->zweiteZahl;;
         ui->teil->setChecked(false);
 
     }
 
+    ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
     this->trackButton=false;
 
 
@@ -158,16 +157,47 @@ void TaschenrechnerW::istGleich(){
 void TaschenrechnerW::operationen()
 {
     QPushButton *button=(QPushButton*)sender();
+    QString operation="";
+    QStringList Mathe;
+    Mathe<<"+"<<"-"<<"x"<<"/";
 
-    this->ersteZahl=(ui->Ausgabe->text()).toDouble();
-    this->LCDZahl=0;
-    ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
+    if(this->trackButton==false){
 
+        this->ersteZahl=(ui->Ausgabe->text()).toDouble();
+
+    }
+    else{
+        this->zweiteZahl=ui->Ausgabe->text().toDouble();
+        switch (Mathe.indexOf(operation)) {
+        case 0:
+            this->ergebnis=this->ersteZahl+this->zweiteZahl;
+            break;
+        case 1:
+            this->ergebnis=this->ersteZahl-this->zweiteZahl;
+            break;
+        case 2:
+            this->ergebnis=this->ersteZahl*this->zweiteZahl;
+            break;
+        case 3:
+            this->ergebnis=this->ersteZahl/this->zweiteZahl;
+            break;
+         }
+
+        ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
+        this->ersteZahl=this->ergebnis;
+        this->trackButton=false;
+
+
+
+    }
+    operation=button->text();
     button->setChecked(true);
 
 
 
+
 }
+
 
 
 

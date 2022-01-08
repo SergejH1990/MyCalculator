@@ -19,8 +19,10 @@ public:
 private:
     double LCDZahl;
     double ersteZahl;
+    double zweiteZahl;
     bool trackButton;
-    int ergebnis;
+    double ergebnis;
+    QString operation;
 
 private:
     Ui::TaschenrechnerW *ui;
@@ -28,7 +30,6 @@ private:
 private slots:
     void num_pressed();
     void ausgabeManipulation();
-    void on_dezi_released();
     void operationen();
     void istGleich();
 
