@@ -161,7 +161,7 @@ void TaschenrechnerW::operationen()
 
     this->ersteZahl=(ui->Ausgabe->text()).toDouble();
     this->LCDZahl=0;
-    ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
+    ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',13));
 
     button->setChecked(true);
 
