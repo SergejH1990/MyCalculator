@@ -102,6 +102,7 @@ void TaschenrechnerW::ausgabeManipulation()
             this->ersteZahl=0;
             this->zweiteZahl=0;
             this->ergebnis=0;
+            this->operation="";
             ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
             ui->plus->setChecked(false);
             ui->minus->setChecked(false);
@@ -130,19 +131,19 @@ void TaschenrechnerW::istGleich(){
     }
 
     else if(ui->minus->isChecked()){
-        this->ergebnis=this->ergebnis=this->ersteZahl-this->zweiteZahl;
+        this->ergebnis=this->ersteZahl-this->zweiteZahl;
         ui->minus->setChecked(false);
 
     }
 
     else if(ui->mal->isChecked()){
-        this->ergebnis=this->ergebnis=this->ersteZahl*this->zweiteZahl;
+        this->ergebnis=this->ersteZahl*this->zweiteZahl;
         ui->mal->setChecked(false);
 
     }
 
     else if(ui->teil->isChecked()){
-        this->ergebnis=this->ergebnis=this->ersteZahl/this->zweiteZahl;;
+        this->ergebnis=this->ersteZahl/this->zweiteZahl;;
         ui->teil->setChecked(false);
 
     }
