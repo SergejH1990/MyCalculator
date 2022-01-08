@@ -107,7 +107,7 @@ void TaschenrechnerW::ausgabeManipulation()
 
             this->LCDZahl=0;
             this->ersteZahl=0;
-            ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
+            ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',13));
             ui->plus->setChecked(false);
             ui->minus->setChecked(false);
             ui->mal->setChecked(false);
