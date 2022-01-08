@@ -107,7 +107,7 @@ void TaschenrechnerW::ausgabeManipulation()
 
             this->LCDZahl=0;
             this->ersteZahl=0;
-            ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',13));
+            ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
             ui->plus->setChecked(false);
             ui->minus->setChecked(false);
             ui->mal->setChecked(false);
@@ -123,28 +123,28 @@ void TaschenrechnerW::istGleich(){
 
     if(ui->plus->isChecked()){
           this->ergebnis=this->ersteZahl+this->LCDZahl;
-          ui->Ausgabe->setText(QString::number(this->ergebnis,'g',13));
+          ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
 
           ui->plus->setChecked(false);
     }
 
     else if(ui->minus->isChecked()){
         this->ergebnis=this->ersteZahl-this->LCDZahl;
-        ui->Ausgabe->setText(QString::number(this->ergebnis,'g',13));
+        ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
         ui->minus->setChecked(false);
 
     }
 
     else if(ui->mal->isChecked()){
         this->ergebnis=this->ersteZahl*this->LCDZahl;
-        ui->Ausgabe->setText(QString::number(this->ergebnis,'g',13));
+        ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
         ui->mal->setChecked(false);
 
     }
 
     else if(ui->teil->isChecked()){
         this->ergebnis=this->ersteZahl/this->LCDZahl;
-        ui->Ausgabe->setText(QString::number(this->ergebnis,'g',13));
+        ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
         ui->teil->setChecked(false);
 
     }
@@ -161,7 +161,7 @@ void TaschenrechnerW::operationen()
 
     this->ersteZahl=(ui->Ausgabe->text()).toDouble();
     this->LCDZahl=0;
-    ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',13));
+    ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
 
     button->setChecked(true);
 
