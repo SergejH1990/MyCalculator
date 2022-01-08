@@ -158,7 +158,6 @@ void TaschenrechnerW::istGleich(){
 void TaschenrechnerW::operationen()
 {
     QPushButton *button=(QPushButton*)sender();
-    QString operation="";
     QStringList Mathe;
     Mathe<<"+"<<"-"<<"x"<<"/";
 
