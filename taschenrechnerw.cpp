@@ -4,6 +4,7 @@
 #include <QtMath>
 #include <QDebug>
 #include <QRegExp>
+#include <QMessageBox>
 
 
 //Konstruktor
@@ -63,7 +64,7 @@ TaschenrechnerW::~TaschenrechnerW()
 }
 
 
-//Die Eingabe einer Nummer eines Buttons und Ausgabe auf der Anzeige
+//Die Eingabe einer Nummer und Ausgabe auf der Anzeige
 
 void TaschenrechnerW::num_pressed()
 {
@@ -77,7 +78,7 @@ void TaschenrechnerW::num_pressed()
      }
      else{
         this->LCDZahl=(ui->Ausgabe->text()+button->text()).toDouble();
-        this->trackButton=false;
+
       }
 
 
@@ -143,13 +144,21 @@ void TaschenrechnerW::istGleich(){
     }
 
     else if(ui->teil->isChecked()){
-        this->ergebnis=this->ersteZahl/this->zweiteZahl;;
+
+        if(this->zweiteZahl!=0)
+        this->ergebnis=this->ersteZahl/this->zweiteZahl;
+        else
+        {
+        this->Box.setText("Division through zero not allowed");
+        this->Box.exec();
+        }
         ui->teil->setChecked(false);
 
     }
 
     ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
     this->trackButton=false;
+    this->operation="";
 
 
 }
@@ -161,7 +170,7 @@ void TaschenrechnerW::operationen()
     QStringList Mathe;
     Mathe<<"+"<<"-"<<"x"<<"/";
 
-    if(this->trackButton==false){
+    if(this->operation==""){
 
         this->ersteZahl=(ui->Ausgabe->text()).toDouble();
 
@@ -179,19 +188,26 @@ void TaschenrechnerW::operationen()
             this->ergebnis=this->ersteZahl*this->zweiteZahl;
             break;
         case 3:
+            if(this->zweiteZahl!=0)
             this->ergebnis=this->ersteZahl/this->zweiteZahl;
+            else
+           {
+                this->Box.setText("Division through zero not allowed");
+                this->Box.exec();
+           }
             break;
          }
 
         ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
         this->ersteZahl=this->ergebnis;
-        this->trackButton=false;
+
 
 
 
     }
     operation=button->text();
     button->setChecked(true);
+    this->trackButton=false;
 
 
 

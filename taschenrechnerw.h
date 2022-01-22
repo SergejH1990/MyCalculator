@@ -2,6 +2,7 @@
 #define TASCHENRECHNERW_H
 
 #include <QMainWindow>
+#include <QMessageBox>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class TaschenrechnerW; }
@@ -23,6 +24,7 @@ private:
     bool trackButton;
     double ergebnis;
     QString operation;
+    QMessageBox Box;
 
 private:
     Ui::TaschenrechnerW *ui;
