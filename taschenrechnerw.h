@@ -25,6 +25,7 @@ private:
     double ergebnis;
     QString operation;
     QMessageBox Box;
+    const QStringList Mathe={"+","-","x","/"};
 
 private:
     Ui::TaschenrechnerW *ui;

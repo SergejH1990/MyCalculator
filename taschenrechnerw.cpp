@@ -87,6 +87,7 @@ void TaschenrechnerW::num_pressed()
 }
 
 
+//Vorzeichenwechsel, Reset des Taschenrechners und Fließpunktzahl schreiben
 
 void TaschenrechnerW::ausgabeManipulation()
 {
@@ -121,6 +122,8 @@ void TaschenrechnerW::ausgabeManipulation()
 
 }
 
+
+//Ausführung des Gleichheitszeichens
 
 void TaschenrechnerW::istGleich(){
 
@@ -163,12 +166,13 @@ void TaschenrechnerW::istGleich(){
 
 }
 
+//Ausführung der mathematischen Operationenknöpfe
 
 void TaschenrechnerW::operationen()
 {
     QPushButton *button=(QPushButton*)sender();
-    QStringList Mathe;
-    Mathe<<"+"<<"-"<<"x"<<"/";
+
+
 
     if(this->operation==""){
 
@@ -177,7 +181,7 @@ void TaschenrechnerW::operationen()
     }
     else{
         this->zweiteZahl=ui->Ausgabe->text().toDouble();
-        switch (Mathe.indexOf(operation)) {
+        switch (this->Mathe.indexOf(operation)) {
         case 0:
             this->ergebnis=this->ersteZahl+this->zweiteZahl;
             break;
