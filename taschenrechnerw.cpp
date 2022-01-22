@@ -127,22 +127,22 @@ void TaschenrechnerW::ausgabeManipulation()
 
 void TaschenrechnerW::istGleich(){
 
-    this->zweiteZahl=ui->Ausgabe->text().toDouble();
+    this->zweiteZahl=this->LCDZahl;
 
     if(ui->plus->isChecked()){
           this->ergebnis=this->ersteZahl+this->zweiteZahl;
-          ui->plus->setChecked(false);
+
     }
 
     else if(ui->minus->isChecked()){
         this->ergebnis=this->ersteZahl-this->zweiteZahl;
-        ui->minus->setChecked(false);
+
 
     }
 
     else if(ui->mal->isChecked()){
         this->ergebnis=this->ersteZahl*this->zweiteZahl;
-        ui->mal->setChecked(false);
+
 
     }
 
@@ -155,13 +155,17 @@ void TaschenrechnerW::istGleich(){
         this->Box.setText("Division through zero not allowed");
         this->Box.exec();
         }
-        ui->teil->setChecked(false);
+
 
     }
 
     ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
     this->trackButton=false;
     this->operation="";
+    ui->plus->setChecked(false);
+    ui->minus->setChecked(false);
+    ui->mal->setChecked(false);
+    ui->teil->setChecked(false);
 
 
 }
@@ -180,7 +184,7 @@ void TaschenrechnerW::operationen()
 
     }
     else{
-        this->zweiteZahl=ui->Ausgabe->text().toDouble();
+        this->zweiteZahl=this->LCDZahl;
         switch (this->Mathe.indexOf(operation)) {
         case 0:
             this->ergebnis=this->ersteZahl+this->zweiteZahl;
