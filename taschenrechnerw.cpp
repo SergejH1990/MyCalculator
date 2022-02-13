@@ -16,6 +16,7 @@ TaschenrechnerW::TaschenrechnerW(QWidget *parent): QMainWindow(parent)
     zweiteZahl=0;
     trackButton=false;
     operation="";
+    operation2="";
     ergebnis=0;
 
 
@@ -75,6 +76,7 @@ void TaschenrechnerW::num_pressed()
      if((ui->plus->isChecked()||ui->minus->isChecked()||ui->mal->isChecked()||ui->teil->isChecked())&&(!this->trackButton)){
          this->LCDZahl=button->text().toDouble();
          this->trackButton=true;
+         this->operation2="";
      }
      else{
         this->LCDZahl=(ui->Ausgabe->text()+button->text()).toDouble();
@@ -105,6 +107,7 @@ void TaschenrechnerW::ausgabeManipulation()
             this->zweiteZahl=0;
             this->ergebnis=0;
             this->operation="";
+            this->operation2="";
             ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
             ui->plus->setChecked(false);
             ui->minus->setChecked(false);
@@ -123,7 +126,7 @@ void TaschenrechnerW::ausgabeManipulation()
 }
 
 
-//Ausführung des Gleichheitszeichens
+//Ausführung des Gleichheitsknopfes
 
 void TaschenrechnerW::istGleich(){
 
@@ -162,6 +165,7 @@ void TaschenrechnerW::istGleich(){
     ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
     this->trackButton=false;
     this->operation="";
+    this->operation2="";
     ui->plus->setChecked(false);
     ui->minus->setChecked(false);
     ui->mal->setChecked(false);
@@ -182,8 +186,10 @@ void TaschenrechnerW::operationen()
 
         this->ersteZahl=(ui->Ausgabe->text()).toDouble();
 
+
     }
-    else{
+    else if (this->operation!=this->operation2){
+
         this->zweiteZahl=this->LCDZahl;
         switch (this->Mathe.indexOf(operation)) {
         case 0:
@@ -194,6 +200,7 @@ void TaschenrechnerW::operationen()
             break;
         case 2:
             this->ergebnis=this->ersteZahl*this->zweiteZahl;
+
             break;
         case 3:
             if(this->zweiteZahl!=0)
@@ -213,9 +220,10 @@ void TaschenrechnerW::operationen()
 
 
     }
-    operation=button->text();
+    this->operation=this->operation2+button->text();
     button->setChecked(true);
     this->trackButton=false;
+    this->operation2=button->text();
 
 
 

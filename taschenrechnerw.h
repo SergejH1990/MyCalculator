@@ -24,8 +24,9 @@ private:
     bool trackButton;
     double ergebnis;
     QString operation;
+    QString operation2;
     QMessageBox Box;
-    const QStringList Mathe={"+","-","x","/"};
+    const QStringList Mathe={"+","-","x","/","++","--","xx","//","+-","-+","+x","x+","+/","/+","-x","x-","-/","/-","x/","/x"};
 
 private:
     Ui::TaschenrechnerW *ui;
