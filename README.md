@@ -1,2 +1,2 @@
 # MyCalculator
-TaschenrechnerTest
+Calculator as practise
