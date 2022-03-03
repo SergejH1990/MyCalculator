@@ -18,24 +18,24 @@ public:
     ~TaschenrechnerW();
 
 private:
-    double LCDZahl;
-    double ersteZahl;
-    double zweiteZahl;
-    bool trackButton;
-    double ergebnis;
-    QString operation;
-    QString operation2;
+    double screenNumber;
+    double firstOperatorNumber;
+    double secondOperatorNumber;
+    bool trackfirstInput;
+    double operationResult;
+    QString trackOperationButton;
+    QString trackTwoCLicksOperation;
     QMessageBox Box;
-    const QStringList Mathe={"+","-","x","/","++","--","xx","//","+-","-+","+x","x+","+/","/+","-x","x-","-/","/-","x/","/x"};
+    const QStringList MATH_OPERATIONS_LIST={"+","-","x","/"};
 
 private:
     Ui::TaschenrechnerW *ui;
 
 private slots:
     void num_pressed();
-    void ausgabeManipulation();
-    void operationen();
-    void istGleich();
+    void singleNUmberOutputManipulation();
+    void mathematicalOperations();
+    void equalButton();
 
 };
 #endif // TASCHENRECHNERW_H

@@ -11,13 +11,13 @@
 TaschenrechnerW::TaschenrechnerW(QWidget *parent): QMainWindow(parent)
     , ui(new Ui::TaschenrechnerW)
 {
-    LCDZahl=0;
-    ersteZahl=0;
-    zweiteZahl=0;
-    trackButton=false;
-    operation="";
-    operation2="";
-    ergebnis=0;
+    screenNumber=0;
+    firstOperatorNumber=0;
+    secondOperatorNumber=0;
+    trackfirstInput=false;
+    trackOperationButton="";
+    trackTwoCLicksOperation="";
+    operationResult=0;
 
 
     ui->setupUi(this);
@@ -38,18 +38,18 @@ TaschenrechnerW::TaschenrechnerW(QWidget *parent): QMainWindow(parent)
 
     //Ausgabenmodifikationen
 
-    connect(ui->Vorzeichen,SIGNAL(released()),this,SLOT(ausgabeManipulation()));
-    connect(ui->del,SIGNAL(released()),this,SLOT(ausgabeManipulation()));
-    connect(ui->dezi,SIGNAL(released()),this,SLOT(ausgabeManipulation()));
+    connect(ui->Vorzeichen,SIGNAL(released()),this,SLOT(singleNUmberOutputManipulation()));
+    connect(ui->del,SIGNAL(released()),this,SLOT(singleNUmberOutputManipulation()));
+    connect(ui->dezi,SIGNAL(released()),this,SLOT(singleNUmberOutputManipulation()));
 
-    connect(ui->gleich,SIGNAL(released()),this,SLOT(istGleich()));
+    connect(ui->gleich,SIGNAL(released()),this,SLOT(equalButton()));
 
     //mathematische Operationen
 
-    connect(ui->plus,SIGNAL(released()),this,SLOT(operationen()));
-    connect(ui->minus,SIGNAL(released()),this,SLOT(operationen()));
-    connect(ui->mal,SIGNAL(released()),this,SLOT(operationen()));
-    connect(ui->teil,SIGNAL(released()),this,SLOT(operationen()));
+    connect(ui->plus,SIGNAL(released()),this,SLOT(mathematicalOperations()));
+    connect(ui->minus,SIGNAL(released()),this,SLOT(mathematicalOperations()));
+    connect(ui->mal,SIGNAL(released()),this,SLOT(mathematicalOperations()));
+    connect(ui->teil,SIGNAL(released()),this,SLOT(mathematicalOperations()));
 
     ui->minus->setCheckable(true);
     ui->plus->setCheckable(true);
@@ -73,42 +73,43 @@ void TaschenrechnerW::num_pressed()
 
 
 
-     if((ui->plus->isChecked()||ui->minus->isChecked()||ui->mal->isChecked()||ui->teil->isChecked())&&(!this->trackButton)){
-         this->LCDZahl=button->text().toDouble();
-         this->trackButton=true;
-         this->operation2="";
+     if((ui->plus->isChecked()||ui->minus->isChecked()||ui->mal->isChecked()||ui->teil->isChecked())&&(!this->trackfirstInput)){
+         this->screenNumber=button->text().toDouble();
+         this->trackfirstInput=true;
+         this->trackTwoCLicksOperation="";
      }
      else{
-        this->LCDZahl=(ui->Ausgabe->text()+button->text()).toDouble();
+        this->screenNumber=(ui->Ausgabe->text()+button->text()).toDouble();
 
       }
 
 
-     ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
+     ui->Ausgabe->setText(QString::number(this->screenNumber,'g',15));
 
 }
 
 
 //Vorzeichenwechsel, Reset des Taschenrechners und Fließpunktzahl schreiben
 
-void TaschenrechnerW::ausgabeManipulation()
+void TaschenrechnerW::singleNUmberOutputManipulation()
 {
     QPushButton *button=(QPushButton*)sender();
 
        if(button->text()=="-/+"){
 
-            this->LCDZahl=-1*(ui->Ausgabe->text()).toDouble();
-            ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
+            this->screenNumber=-1*(ui->Ausgabe->text()).toDouble();
+            ui->Ausgabe->setText(QString::number(this->screenNumber,'g',15));
         }
         else if(button->text()=="Del"){
 
-            this->LCDZahl=0;
-            this->ersteZahl=0;
-            this->zweiteZahl=0;
-            this->ergebnis=0;
-            this->operation="";
-            this->operation2="";
-            ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
+           this->screenNumber=0;
+           this->firstOperatorNumber=0;
+           this->secondOperatorNumber=0;
+           this->trackfirstInput=false;
+           this->trackOperationButton="";
+           this->trackTwoCLicksOperation="";
+           this->operationResult=0;
+            ui->Ausgabe->setText(QString::number(this->screenNumber,'g',15));
             ui->plus->setChecked(false);
             ui->minus->setChecked(false);
             ui->mal->setChecked(false);
@@ -128,31 +129,31 @@ void TaschenrechnerW::ausgabeManipulation()
 
 //Ausführung des Gleichheitsknopfes
 
-void TaschenrechnerW::istGleich(){
+void TaschenrechnerW::equalButton(){
 
-    this->zweiteZahl=this->LCDZahl;
+    this->secondOperatorNumber=this->screenNumber;
 
     if(ui->plus->isChecked()){
-          this->ergebnis=this->ersteZahl+this->zweiteZahl;
+          this->operationResult=this->firstOperatorNumber+this->secondOperatorNumber;
 
     }
 
     else if(ui->minus->isChecked()){
-        this->ergebnis=this->ersteZahl-this->zweiteZahl;
+        this->operationResult=this->firstOperatorNumber-this->secondOperatorNumber;
 
 
     }
 
     else if(ui->mal->isChecked()){
-        this->ergebnis=this->ersteZahl*this->zweiteZahl;
+        this->operationResult=this->firstOperatorNumber*this->secondOperatorNumber;
 
 
     }
 
     else if(ui->teil->isChecked()){
 
-        if(this->zweiteZahl!=0)
-        this->ergebnis=this->ersteZahl/this->zweiteZahl;
+        if(this->secondOperatorNumber!=0)
+        this->operationResult=this->firstOperatorNumber/this->secondOperatorNumber;
         else
         {
         this->Box.setText("Division through zero not allowed");
@@ -162,10 +163,10 @@ void TaschenrechnerW::istGleich(){
 
     }
 
-    ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
-    this->trackButton=false;
-    this->operation="";
-    this->operation2="";
+    ui->Ausgabe->setText(QString::number(this->operationResult,'g',15));
+    this->trackfirstInput=false;
+    this->trackOperationButton="";
+    this->trackTwoCLicksOperation="";
     ui->plus->setChecked(false);
     ui->minus->setChecked(false);
     ui->mal->setChecked(false);
@@ -176,35 +177,35 @@ void TaschenrechnerW::istGleich(){
 
 //Ausführung der mathematischen Operationenknöpfe
 
-void TaschenrechnerW::operationen()
+void TaschenrechnerW::mathematicalOperations()
 {
     QPushButton *button=(QPushButton*)sender();
 
 
 
-    if(this->operation==""){
+    if(this->trackOperationButton==""){
 
-        this->ersteZahl=(ui->Ausgabe->text()).toDouble();
+        this->firstOperatorNumber=(ui->Ausgabe->text()).toDouble();
 
 
     }
-    else if (this->operation!=this->operation2){
+    else if (this->trackOperationButton!=this->trackTwoCLicksOperation){
 
-        this->zweiteZahl=this->LCDZahl;
-        switch (this->Mathe.indexOf(operation)) {
+        this->secondOperatorNumber=this->screenNumber;
+        switch (this->MATH_OPERATIONS_LIST.indexOf(trackOperationButton)) {
         case 0:
-            this->ergebnis=this->ersteZahl+this->zweiteZahl;
+            this->operationResult=this->firstOperatorNumber+this->secondOperatorNumber;
             break;
         case 1:
-            this->ergebnis=this->ersteZahl-this->zweiteZahl;
+            this->operationResult=this->firstOperatorNumber-this->secondOperatorNumber;
             break;
         case 2:
-            this->ergebnis=this->ersteZahl*this->zweiteZahl;
+            this->operationResult=this->firstOperatorNumber*this->secondOperatorNumber;
 
             break;
         case 3:
-            if(this->zweiteZahl!=0)
-            this->ergebnis=this->ersteZahl/this->zweiteZahl;
+            if(this->secondOperatorNumber!=0)
+            this->operationResult=this->firstOperatorNumber/this->secondOperatorNumber;
             else
            {
                 this->Box.setText("Division through zero not allowed");
@@ -213,17 +214,17 @@ void TaschenrechnerW::operationen()
             break;
          }
 
-        ui->Ausgabe->setText(QString::number(this->ergebnis,'g',15));
-        this->ersteZahl=this->ergebnis;
+        ui->Ausgabe->setText(QString::number(this->operationResult,'g',15));
+        this->firstOperatorNumber=this->operationResult;
 
 
 
 
     }
-    this->operation=this->operation2+button->text();
+    this->trackOperationButton=this->trackTwoCLicksOperation+button->text();
     button->setChecked(true);
-    this->trackButton=false;
-    this->operation2=button->text();
+    this->trackfirstInput=false;
+    this->trackTwoCLicksOperation=button->text();
 
 
 
