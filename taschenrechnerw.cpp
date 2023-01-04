@@ -1,69 +1,53 @@
 #include "taschenrechnerw.h"
-#include "ui_taschenrechnerw.h"
 #include <QVector>
 #include <QtMath>
 #include <QDebug>
 #include <QRegExp>
-#include <QMessageBox>
+#include <QPushButton>
+#include <QLabel>
 
 
 //Konstruktor
-TaschenrechnerW::TaschenrechnerW(QWidget *parent): QMainWindow(parent)
-    , ui(new Ui::TaschenrechnerW)
+TaschenrechnerW::TaschenrechnerW(QWidget *parent): QMainWindow(parent),
+screenNumber(0.0),
+firstOperatorNumber(0.0),
+secondOperatorNumber(0.0),
+operationResult(0.0),
+trackfirstInput(false),
+trackOperationButton(),
+trackTwoCLicksOperation(),
+taschenrechnerAnzeige(new QLabel),
+numberButton0(new QPushButton),
+numberButton1(new QPushButton),
+numberButton2(new QPushButton),
+numberButton3(new QPushButton),
+numberButton4(new QPushButton),
+numberButton5(new QPushButton),
+numberButton6(new QPushButton),
+numberButton7(new QPushButton),
+numberButton8(new QPushButton),
+numberButton9(new QPushButton),
+Box()
 {
-    LCDZahl=0;
-    ersteZahl=0;
-    zweiteZahl=0;
-    trackButton=false;
-    operation="";
-    operation2="";
-    ergebnis=0;
-
-
-    ui->setupUi(this);
-
-
     //Nummernbuttons Slots
 
-    connect(ui->eins,SIGNAL(released()),this,SLOT(num_pressed()));
-    connect(ui->zwei,SIGNAL(released()),this,SLOT(num_pressed()));
-    connect(ui->drei,SIGNAL(released()),this,SLOT(num_pressed()));
-    connect(ui->vier,SIGNAL(released()),this,SLOT(num_pressed()));
-    connect(ui->fuenf,SIGNAL(released()),this,SLOT(num_pressed()));
-    connect(ui->sechs,SIGNAL(released()),this,SLOT(num_pressed()));
-    connect(ui->sieben,SIGNAL(released()),this,SLOT(num_pressed()));
-    connect(ui->acht,SIGNAL(released()),this,SLOT(num_pressed()));
-    connect(ui->neun,SIGNAL(released()),this,SLOT(num_pressed()));
-    connect(ui->nulli,SIGNAL(released()),this,SLOT(num_pressed()));
+    connect(numberButton1, &QPushButton::released, this, &TaschenrechnerW::num_pressed);
 
     //Ausgabenmodifikationen
 
-    connect(ui->Vorzeichen,SIGNAL(released()),this,SLOT(ausgabeManipulation()));
-    connect(ui->del,SIGNAL(released()),this,SLOT(ausgabeManipulation()));
-    connect(ui->dezi,SIGNAL(released()),this,SLOT(ausgabeManipulation()));
-
-    connect(ui->gleich,SIGNAL(released()),this,SLOT(istGleich()));
+    //connect(ui->Vorzeichen,SIGNAL(released()),this,SLOT(singleNUmberOutputManipulation()));
+    //connect(ui->gleich,SIGNAL(released()),this,SLOT(equalButton()));
 
     //mathematische Operationen
 
-    connect(ui->plus,SIGNAL(released()),this,SLOT(operationen()));
-    connect(ui->minus,SIGNAL(released()),this,SLOT(operationen()));
-    connect(ui->mal,SIGNAL(released()),this,SLOT(operationen()));
-    connect(ui->teil,SIGNAL(released()),this,SLOT(operationen()));
+    //connect(ui->plus,SIGNAL(released()),this,SLOT(mathematicalOperations()));
 
-    ui->minus->setCheckable(true);
-    ui->plus->setCheckable(true);
-    ui->mal->setCheckable(true);
-    ui->teil->setCheckable(true);
-
-
+    //ui->minus->setCheckable(true);
 }
 
 TaschenrechnerW::~TaschenrechnerW()
 {
-    delete ui;
 }
-
 
 //Die Eingabe einer Nummer und Ausgabe auf der Anzeige
 
@@ -71,35 +55,36 @@ void TaschenrechnerW::num_pressed()
 {
      QPushButton *button=(QPushButton*)sender();
 
-
-
-     if((ui->plus->isChecked()||ui->minus->isChecked()||ui->mal->isChecked()||ui->teil->isChecked())&&(!this->trackButton)){
-         this->LCDZahl=button->text().toDouble();
-         this->trackButton=true;
-         this->operation2="";
+     if((ui->plus->isChecked()||ui->minus->isChecked()||ui->mal->isChecked()||ui->teil->isChecked())&&(!this->trackfirstInput))
+     {
+         this->screenNumber=button->text().toDouble();
+         this->trackfirstInput=true;
+         this->trackTwoCLicksOperation="";
      }
-     else{
+     else
+     {
         this->LCDZahl=(ui->Ausgabe->text()+button->text()).toDouble();
-
-      }
-
+     }
 
      ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
-
 }
 
 
-//Vorzeichenwechsel, Reset des Taschenrechners und Fließpunktzahl schreiben
 
 void TaschenrechnerW::ausgabeManipulation()
 {
     QPushButton *button=(QPushButton*)sender();
+
+        //Vorzeichenwechsel
 
        if(button->text()=="-/+"){
 
             this->LCDZahl=-1*(ui->Ausgabe->text()).toDouble();
             ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
         }
+
+       //Reset des Taschenrechners
+
         else if(button->text()=="Del"){
 
             this->LCDZahl=0;
@@ -114,6 +99,9 @@ void TaschenrechnerW::ausgabeManipulation()
             ui->mal->setChecked(false);
             ui->teil->setChecked(false);
         }
+
+       //Fließpunktzahl schreiben
+
        else if(button->text()=="."){
 
            QRegExp rx("[.]");
