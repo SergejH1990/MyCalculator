@@ -5,33 +5,81 @@
 #include <QRegExp>
 #include <QPushButton>
 #include <QLabel>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 
 //Konstruktor
 TaschenrechnerW::TaschenrechnerW(QWidget *parent): QMainWindow(parent),
+taschenrechnerWidget(new QWidget),
+taschenrechnerAnzeige(new QLabel),
+verticalLayout(new QVBoxLayout),
+buttonRow1(new QHBoxLayout),
+buttonRow2(new QHBoxLayout),
+buttonRow3(new QHBoxLayout),
+buttonRow4(new QHBoxLayout),
+numberButtons(),
+plusButton(new QPushButton),
+minusButton(new QPushButton),
+multiplyButton(new QPushButton),
+divideButton(new QPushButton),
+signChangeButton(new QPushButton),
+equalButton(new QPushButton),
 screenNumber(0.0),
 firstOperatorNumber(0.0),
 secondOperatorNumber(0.0),
-operationResult(0.0),
 trackfirstInput(false),
+operationResult(0.0),
 trackOperationButton(),
 trackTwoCLicksOperation(),
-taschenrechnerAnzeige(new QLabel),
-numberButton0(new QPushButton),
-numberButton1(new QPushButton),
-numberButton2(new QPushButton),
-numberButton3(new QPushButton),
-numberButton4(new QPushButton),
-numberButton5(new QPushButton),
-numberButton6(new QPushButton),
-numberButton7(new QPushButton),
-numberButton8(new QPushButton),
-numberButton9(new QPushButton),
 Box()
 {
-    //Nummernbuttons Slots
+    //Set text of buttons
+    for (int buttonNumber=0; buttonNumber < (int)numberButtons.size(); buttonNumber++)
+    {
+        numberButtons[buttonNumber] = new QPushButton();
+        numberButtons[buttonNumber]->setText(QString::number(buttonNumber));
+        connect(numberButtons[buttonNumber],&QPushButton::released, this, &TaschenrechnerW::num_pressed);
+    }
 
-    connect(numberButton1, &QPushButton::released, this, &TaschenrechnerW::num_pressed);
+    plusButton->setText("+");
+    minusButton->setText("-");
+    multiplyButton->setText("*");
+    divideButton->setText("/");
+    signChangeButton->setText("+/-");
+    equalButton->setText("=");
+
+    //Layout of buttons and label
+    verticalLayout->addWidget(taschenrechnerAnzeige);
+    verticalLayout->addLayout(buttonRow1);
+    verticalLayout->addLayout(buttonRow2);
+    verticalLayout->addLayout(buttonRow3);
+    verticalLayout->addLayout(buttonRow4);
+
+    buttonRow1->addWidget(numberButtons[1]);
+    buttonRow1->addWidget(numberButtons[2]);
+    buttonRow1->addWidget(numberButtons[3]);
+    buttonRow1->addWidget(plusButton);
+    buttonRow2->addWidget(numberButtons[4]);
+    buttonRow2->addWidget(numberButtons[5]);
+    buttonRow2->addWidget(numberButtons[6]);
+    buttonRow2->addWidget(minusButton);
+    buttonRow3->addWidget(numberButtons[7]);
+    buttonRow3->addWidget(numberButtons[8]);
+    buttonRow3->addWidget(numberButtons[9]);
+    buttonRow3->addWidget(multiplyButton);
+    buttonRow4->addWidget(signChangeButton);
+    buttonRow4->addWidget(numberButtons[0]);
+    buttonRow4->addWidget(equalButton);
+    buttonRow4->addWidget(divideButton);
+
+    taschenrechnerWidget->setLayout(verticalLayout);
+    setCentralWidget(taschenrechnerWidget);
+
+    //Initialize label
+    taschenrechnerAnzeige->setText("0");
+    taschenrechnerAnzeige->setAlignment(Qt::AlignRight);
+    taschenrechnerAnzeige->setStyleSheet("QLabel{font-size: 20px; background: yellow;}");
 
     //Ausgabenmodifikationen
 
@@ -53,9 +101,7 @@ TaschenrechnerW::~TaschenrechnerW()
 
 void TaschenrechnerW::num_pressed()
 {
-     QPushButton *button=(QPushButton*)sender();
-
-     if((ui->plus->isChecked()||ui->minus->isChecked()||ui->mal->isChecked()||ui->teil->isChecked())&&(!this->trackfirstInput))
+     /*if((ui->plus->isChecked()||ui->minus->isChecked()||ui->mal->isChecked()||ui->teil->isChecked())&&(!this->trackfirstInput))
      {
          this->screenNumber=button->text().toDouble();
          this->trackfirstInput=true;
@@ -66,17 +112,14 @@ void TaschenrechnerW::num_pressed()
         this->LCDZahl=(ui->Ausgabe->text()+button->text()).toDouble();
      }
 
-     ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));
+     ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));*/
 }
 
 
 
-void TaschenrechnerW::ausgabeManipulation()
+void TaschenrechnerW::singleNUmberOutputManipulation()
 {
-    QPushButton *button=(QPushButton*)sender();
-
-        //Vorzeichenwechsel
-
+/*
        if(button->text()=="-/+"){
 
             this->LCDZahl=-1*(ui->Ausgabe->text()).toDouble();
@@ -108,17 +151,15 @@ void TaschenrechnerW::ausgabeManipulation()
            if(-1==rx.indexIn(ui->Ausgabe->text()))
            ui->Ausgabe->setText(ui->Ausgabe->text()+".");
 
-       }
-
-
+       }*/
 }
 
 
 //Ausführung des Gleichheitsknopfes
 
-void TaschenrechnerW::istGleich(){
+void TaschenrechnerW::evaluateResult(){
 
-    this->zweiteZahl=this->LCDZahl;
+    /*this->zweiteZahl=this->LCDZahl;
 
     if(ui->plus->isChecked()){
           this->ergebnis=this->ersteZahl+this->zweiteZahl;
@@ -157,20 +198,14 @@ void TaschenrechnerW::istGleich(){
     ui->plus->setChecked(false);
     ui->minus->setChecked(false);
     ui->mal->setChecked(false);
-    ui->teil->setChecked(false);
-
-
+    ui->teil->setChecked(false);*/
 }
 
 //Ausführung der mathematischen Operationenknöpfe
 
-void TaschenrechnerW::operationen()
+void TaschenrechnerW::mathematicalOperations()
 {
-    QPushButton *button=(QPushButton*)sender();
-
-
-
-    if(this->operation==""){
+    /*if(this->operation==""){
 
         this->ersteZahl=(ui->Ausgabe->text()).toDouble();
 
@@ -211,17 +246,5 @@ void TaschenrechnerW::operationen()
     this->operation=this->operation2+button->text();
     button->setChecked(true);
     this->trackButton=false;
-    this->operation2=button->text();
-
-
-
-
+    this->operation2=button->text();*/
 }
-
-
-
-
-
-
-
-
