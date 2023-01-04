@@ -15,8 +15,7 @@ SOURCES += \
 HEADERS += \
     taschenrechnerw.h
 
-FORMS += \
-    taschenrechnerw.ui
+FORMS +=
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
