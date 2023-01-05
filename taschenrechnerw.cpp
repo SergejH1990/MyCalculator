@@ -14,6 +14,7 @@ TaschenrechnerW::TaschenrechnerW(QWidget *parent): QMainWindow(parent),
 taschenrechnerWidget(new QWidget),
 taschenrechnerAnzeige(new QLabel),
 verticalLayout(new QVBoxLayout),
+buttonRow0(new QHBoxLayout),
 buttonRow1(new QHBoxLayout),
 buttonRow2(new QHBoxLayout),
 buttonRow3(new QHBoxLayout),
@@ -25,6 +26,8 @@ multiplyButton(new QPushButton),
 divideButton(new QPushButton),
 signChangeButton(new QPushButton),
 equalButton(new QPushButton),
+deleteButton(new QPushButton),
+commaButton(new QPushButton),
 screenNumber(0.0),
 firstOperatorNumber(0.0),
 secondOperatorNumber(0.0),
@@ -48,30 +51,41 @@ Box()
     divideButton->setText("/");
     signChangeButton->setText("+/-");
     equalButton->setText("=");
+    deleteButton->setText("Del");
+    commaButton->setText(".");
 
     //Layout of buttons and label
     verticalLayout->addWidget(taschenrechnerAnzeige);
+    verticalLayout->addLayout(buttonRow0);
     verticalLayout->addLayout(buttonRow1);
     verticalLayout->addLayout(buttonRow2);
     verticalLayout->addLayout(buttonRow3);
     verticalLayout->addLayout(buttonRow4);
+    verticalLayout->setSpacing(0);
 
+    buttonRow0->addWidget(deleteButton);
+    buttonRow0->addWidget(commaButton);
+    buttonRow0->setSpacing(0);
     buttonRow1->addWidget(numberButtons[1]);
     buttonRow1->addWidget(numberButtons[2]);
     buttonRow1->addWidget(numberButtons[3]);
     buttonRow1->addWidget(plusButton);
+    buttonRow1->setSpacing(0);
     buttonRow2->addWidget(numberButtons[4]);
     buttonRow2->addWidget(numberButtons[5]);
     buttonRow2->addWidget(numberButtons[6]);
     buttonRow2->addWidget(minusButton);
+    buttonRow2->setSpacing(0);
     buttonRow3->addWidget(numberButtons[7]);
     buttonRow3->addWidget(numberButtons[8]);
     buttonRow3->addWidget(numberButtons[9]);
     buttonRow3->addWidget(multiplyButton);
+    buttonRow3->setSpacing(0);
     buttonRow4->addWidget(signChangeButton);
     buttonRow4->addWidget(numberButtons[0]);
     buttonRow4->addWidget(equalButton);
     buttonRow4->addWidget(divideButton);
+    buttonRow4->setSpacing(0);
 
     taschenrechnerWidget->setLayout(verticalLayout);
     setCentralWidget(taschenrechnerWidget);
@@ -90,7 +104,10 @@ Box()
 
     //connect(ui->plus,SIGNAL(released()),this,SLOT(mathematicalOperations()));
 
-    //ui->minus->setCheckable(true);
+    plusButton->setCheckable(true);
+    minusButton->setCheckable(true);
+    multiplyButton->setCheckable(true);
+    divideButton->setCheckable(true);
 }
 
 TaschenrechnerW::~TaschenrechnerW()
@@ -101,18 +118,19 @@ TaschenrechnerW::~TaschenrechnerW()
 
 void TaschenrechnerW::num_pressed()
 {
-     /*if((ui->plus->isChecked()||ui->minus->isChecked()||ui->mal->isChecked()||ui->teil->isChecked())&&(!this->trackfirstInput))
+    QPushButton* button = (sender)QPu;
+     if((plusButton->isChecked() || minusButton->isChecked() || multiplyButton->isChecked() || divideButton->isChecked()) && !trackfirstInput)
      {
-         this->screenNumber=button->text().toDouble();
-         this->trackfirstInput=true;
-         this->trackTwoCLicksOperation="";
+         screenNumber = button->text().toDouble();
+         trackfirstInput = true;
+         trackTwoCLicksOperation = "";
      }
      else
      {
-        this->LCDZahl=(ui->Ausgabe->text()+button->text()).toDouble();
+        firstOperatorNumber = (taschenrechnerAnzeige->text() + button->text()).toDouble();
      }
 
-     ui->Ausgabe->setText(QString::number(this->LCDZahl,'g',15));*/
+     taschenrechnerAnzeige->setText(QString::number(firstOperatorNumber,'g',15));
 }
 
 

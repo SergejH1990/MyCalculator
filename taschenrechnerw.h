@@ -16,6 +16,7 @@ protected:
     class QWidget* taschenrechnerWidget;
     class QLabel* taschenrechnerAnzeige;
     class QVBoxLayout* verticalLayout;
+    class QHBoxLayout* buttonRow0;
     class QHBoxLayout* buttonRow1;
     class QHBoxLayout* buttonRow2;
     class QHBoxLayout* buttonRow3;
@@ -27,6 +28,8 @@ protected:
     class QPushButton* divideButton;
     class QPushButton* signChangeButton;
     class QPushButton* equalButton;
+    class QPushButton* deleteButton;
+    class QPushButton* commaButton;
 
     void num_pressed();
     void singleNUmberOutputManipulation();
