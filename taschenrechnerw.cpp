@@ -94,19 +94,17 @@ Box()
     calculatorDisplay->setAlignment(Qt::AlignRight);
     calculatorDisplay->setStyleSheet("QLabel{font-size: 20px; background: yellow;}");
 
-    //Ausgabenmodifikationen
-
+    //connecting output modifications
     connect(signChangeButton, &QPushButton::released, this, &TaschenrechnerW::singleOutputManipulation);
     connect(deleteButton, &QPushButton::released, this, &TaschenrechnerW::singleOutputManipulation);
     connect(commaButton, &QPushButton::released, this, &TaschenrechnerW::singleOutputManipulation);
+    connect(equalButton, &QPushButton::released, this, &TaschenrechnerW::evaluateResult);
 
-    //mathematische Operationen
+    //connecting mathematical Operations
     connect(plusButton, &QPushButton::released, this, &TaschenrechnerW::mathematicalOperation);
     connect(minusButton, &QPushButton::released, this, &TaschenrechnerW::mathematicalOperation);
     connect(multiplyButton, &QPushButton::released, this, &TaschenrechnerW::mathematicalOperation);
     connect(divideButton, &QPushButton::released, this, &TaschenrechnerW::mathematicalOperation);
-
-    connect(equalButton, &QPushButton::released, this, &TaschenrechnerW::evaluateResult);
 
     plusButton->setCheckable(true);
     minusButton->setCheckable(true);
