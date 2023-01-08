@@ -13,8 +13,17 @@ public:
     ~TaschenrechnerW();
 
 protected:
-    class QWidget* taschenrechnerWidget;
-    class QLabel* taschenrechnerAnzeige;
+    enum class MathOperationList
+    {
+        None,
+        Plus,
+        Minus,
+        Multiply,
+        Divide
+    };
+
+    class QWidget* calculatorWidget;
+    class QLabel* calculatorDisplay;
     class QVBoxLayout* verticalLayout;
     class QHBoxLayout* buttonRow0;
     class QHBoxLayout* buttonRow1;
@@ -31,20 +40,19 @@ protected:
     class QPushButton* deleteButton;
     class QPushButton* commaButton;
 
-    void num_pressed();
-    void singleNUmberOutputManipulation();
-    void mathematicalOperations();
+    void numberButtonPressed();
+    void singleOutputManipulation();
+    void mathematicalOperation();
     void evaluateResult();
+    void resetButtons();
+    MathOperationList GetEnumValueFromString(const QString& buttonName);
 
     double screenNumber;
     double firstOperatorNumber;
     double secondOperatorNumber;
     bool trackfirstInput;
     double operationResult;
-    QString trackOperationButton;
-    QString trackTwoCLicksOperation;
+    MathOperationList trackOperationButton;
     QMessageBox Box;
-    const QStringList MATH_OPERATIONS_LIST={"+","-","x","/"};
-
 };
 #endif // TASCHENRECHNERW_H
