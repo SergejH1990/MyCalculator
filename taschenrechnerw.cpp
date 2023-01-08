@@ -164,8 +164,8 @@ void TaschenrechnerW::singleOutputManipulation()
     }
 }
 
-void TaschenrechnerW::evaluateResult(){
-
+void TaschenrechnerW::evaluateResult()
+{
     secondOperatorNumber = screenNumber;
 
     if(trackOperationButton == MathOperationList::Plus)
