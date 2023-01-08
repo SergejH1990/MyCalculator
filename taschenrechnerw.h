@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QMessageBox>
+#include <array>
 
 class TaschenrechnerW : public QMainWindow
 {
@@ -12,32 +13,46 @@ public:
     ~TaschenrechnerW();
 
 protected:
-    class QLabel* taschenrechnerAnzeige;
-    class QPushButton* numberButton0;
-    class QPushButton* numberButton1;
-    class QPushButton* numberButton2;
-    class QPushButton* numberButton3;
-    class QPushButton* numberButton4;
-    class QPushButton* numberButton5;
-    class QPushButton* numberButton6;
-    class QPushButton* numberButton7;
-    class QPushButton* numberButton8;
-    class QPushButton* numberButton9;
+    enum class MathOperationList
+    {
+        None,
+        Plus,
+        Minus,
+        Multiply,
+        Divide
+    };
 
-    void num_pressed();
-    void singleNUmberOutputManipulation();
-    void mathematicalOperations();
-    void equalButton();
+    class QWidget* calculatorWidget;
+    class QLabel* calculatorDisplay;
+    class QVBoxLayout* verticalLayout;
+    class QHBoxLayout* buttonRow0;
+    class QHBoxLayout* buttonRow1;
+    class QHBoxLayout* buttonRow2;
+    class QHBoxLayout* buttonRow3;
+    class QHBoxLayout* buttonRow4;
+    std::array<class QPushButton*, 10> numberButtons;
+    class QPushButton* plusButton;
+    class QPushButton* minusButton;
+    class QPushButton* multiplyButton;
+    class QPushButton* divideButton;
+    class QPushButton* signChangeButton;
+    class QPushButton* equalButton;
+    class QPushButton* deleteButton;
+    class QPushButton* commaButton;
+
+    void numberButtonPressed();
+    void singleOutputManipulation();
+    void mathematicalOperation();
+    void evaluateResult();
+    void resetButtons();
+    MathOperationList GetEnumValueFromString(const QString& buttonName);
 
     double screenNumber;
     double firstOperatorNumber;
     double secondOperatorNumber;
     bool trackfirstInput;
     double operationResult;
-    QString trackOperationButton;
-    QString trackTwoCLicksOperation;
+    MathOperationList trackOperationButton;
     QMessageBox Box;
-    const QStringList MATH_OPERATIONS_LIST={"+","-","x","/"};
-
 };
 #endif // TASCHENRECHNERW_H
