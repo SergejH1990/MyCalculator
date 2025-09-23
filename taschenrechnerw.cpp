@@ -29,7 +29,7 @@ commaButton(new QPushButton),
 screenNumber(0.0),
 firstOperatorNumber(0.0),
 secondOperatorNumber(0.0),
-trackfirstInput(false),
+isSecondInputNumber(false),
 operationResult(0.0),
 trackOperationButton(MathOperationList::None),
 Box()
@@ -115,10 +115,10 @@ void TaschenrechnerW::numberButtonPressed(const int number)
 {
 	QPushButton* const button = numberButtons[number];
 
-	if(trackOperationButton != MathOperationList::None && !trackfirstInput)
+	if(trackOperationButton != MathOperationList::None && !isSecondInputNumber)
 	{
 		screenNumber = button->text().toDouble();
-		trackfirstInput = true;
+		isSecondInputNumber = true;
 	}
 	else
 	{
@@ -141,7 +141,6 @@ void TaschenrechnerW::singleOutputManipulation()
 	{
 		screenNumber = 0;
 		firstOperatorNumber = 0;
-		secondOperatorNumber = 0;
 		operationResult = 0;
 		calculatorDisplay->setText(QString::number(screenNumber,'g',15));
 		resetButtons();
@@ -154,47 +153,43 @@ void TaschenrechnerW::singleOutputManipulation()
 
 void TaschenrechnerW::evaluateResult()
 {
-    secondOperatorNumber = screenNumber;
+	secondOperatorNumber = screenNumber;
 
-    if(trackOperationButton == MathOperationList::Plus)
-    {
-        operationResult = firstOperatorNumber + secondOperatorNumber;
-    }
-    else if(trackOperationButton == MathOperationList::Minus)
-    {
-        operationResult = firstOperatorNumber - secondOperatorNumber;
-    }
-    else if(trackOperationButton == MathOperationList::Multiply)
-    {
-        operationResult = firstOperatorNumber * secondOperatorNumber;
-    }
-    else if(trackOperationButton == MathOperationList::Divide)
-    {
-        if(secondOperatorNumber != 0)
-        {
-            operationResult = firstOperatorNumber / secondOperatorNumber;
-        }
-        else
-        {
-            Box.setText("Division through zero not allowed");
-            Box.exec();
-            return;
-        }
-    }
+	if(trackOperationButton == MathOperationList::Plus)
+	{
+		operationResult = firstOperatorNumber + secondOperatorNumber;
+	}
+	else if(trackOperationButton == MathOperationList::Minus)
+	{
+		operationResult = firstOperatorNumber - secondOperatorNumber;
+	}
+	else if(trackOperationButton == MathOperationList::Multiply)
+	{
+		operationResult = firstOperatorNumber * secondOperatorNumber;
+	}
+	else if(trackOperationButton == MathOperationList::Divide)
+	{
+		if(secondOperatorNumber != 0)
+		{
+			operationResult = firstOperatorNumber / secondOperatorNumber;
+		}
+		else
+		{
+			Box.setText("Division through zero not allowed");
+			Box.exec();
+			return;
+		}
+	}
 
-    calculatorDisplay->setText(QString::number(operationResult,'g',15));
-    firstOperatorNumber = operationResult;
-    resetButtons();
+	calculatorDisplay->setText(QString::number(operationResult,'g',15));
+	firstOperatorNumber = operationResult;
+	resetButtons();
 }
 
 void TaschenrechnerW::resetButtons()
 {
-	trackfirstInput = false;
+	isSecondInputNumber = false;
 	trackOperationButton = MathOperationList::None;
-	plusButton->setChecked(false);
-	minusButton->setChecked(false);
-	multiplyButton->setChecked(false);
-	divideButton->setChecked(false);
 }
 
 TaschenrechnerW::MathOperationList TaschenrechnerW::GetEnumValueFromString(const QString &buttonName)
@@ -215,49 +210,47 @@ TaschenrechnerW::MathOperationList TaschenrechnerW::GetEnumValueFromString(const
 
 void TaschenrechnerW::mathematicalOperation()
 {
-    QPushButton* button = (QPushButton*)sender();
+	QPushButton* button = (QPushButton*)sender();
 
-    switch (trackOperationButton)
-    {
-    case MathOperationList::None:
-        firstOperatorNumber = calculatorDisplay->text().toDouble();
-        break;
-    case MathOperationList::Plus:
-        secondOperatorNumber = screenNumber;
-        operationResult = firstOperatorNumber + secondOperatorNumber;
-        calculatorDisplay->setText(QString::number(operationResult,'g',15));
-        firstOperatorNumber = operationResult;
-        break;
-    case MathOperationList::Minus:
-        secondOperatorNumber = screenNumber;
-        operationResult = firstOperatorNumber - secondOperatorNumber;
-        calculatorDisplay->setText(QString::number(operationResult,'g',15));
-        firstOperatorNumber = operationResult;
-        break;
-    case MathOperationList::Multiply:
-        secondOperatorNumber = screenNumber;
-        operationResult = firstOperatorNumber * secondOperatorNumber;
-        calculatorDisplay->setText(QString::number(operationResult,'g',15));
-        firstOperatorNumber = operationResult;
-        break;
-    case MathOperationList::Divide:
-        secondOperatorNumber = screenNumber;
-        if(secondOperatorNumber != 0)
-        {
-            operationResult = firstOperatorNumber / secondOperatorNumber;
-            calculatorDisplay->setText(QString::number(operationResult,'g',15));
-            firstOperatorNumber = operationResult;
-        }
-        else
-        {
-            Box.setText("Division through zero not allowed");
-            Box.exec();
-            return;
-        }
-        break;
-     }
+	switch (trackOperationButton)
+	{
+	case MathOperationList::None:
+		firstOperatorNumber = calculatorDisplay->text().toDouble();
+		break;
+	case MathOperationList::Plus:
+		secondOperatorNumber = screenNumber;
+		operationResult = firstOperatorNumber + secondOperatorNumber;
+		calculatorDisplay->setText(QString::number(operationResult,'g',15));
+		firstOperatorNumber = operationResult;
+		break;
+	case MathOperationList::Minus:
+		secondOperatorNumber = screenNumber;
+		operationResult = firstOperatorNumber - secondOperatorNumber;
+		calculatorDisplay->setText(QString::number(operationResult,'g',15));
+		firstOperatorNumber = operationResult;
+		break;
+	case MathOperationList::Multiply:
+		secondOperatorNumber = screenNumber;
+		operationResult = firstOperatorNumber * secondOperatorNumber;
+		calculatorDisplay->setText(QString::number(operationResult,'g',15));
+		firstOperatorNumber = operationResult;
+		break;
+	case MathOperationList::Divide:
+		secondOperatorNumber = screenNumber;
+		if(secondOperatorNumber != 0)
+		{
+			operationResult = firstOperatorNumber / secondOperatorNumber;
+			calculatorDisplay->setText(QString::number(operationResult,'g',15));
+			firstOperatorNumber = operationResult;
+		}
+		else
+		{
+			Box.setText("Division through zero not allowed");
+			Box.exec();
+			return;
+		}
+		break;
+	}
 
-    trackOperationButton = GetEnumValueFromString(button->text());
-    button->setChecked(true);
-    trackfirstInput = false;
+	trackOperationButton = GetEnumValueFromString(button->text());
 }

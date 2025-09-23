@@ -53,7 +53,7 @@ protected:
     double screenNumber;
     double firstOperatorNumber;
     double secondOperatorNumber;
-    bool trackfirstInput;
+	bool isSecondInputNumber;
     double operationResult;
     MathOperationList trackOperationButton;
     QMessageBox Box;
