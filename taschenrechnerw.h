@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <array>
+#include <optional>
 
 class TaschenrechnerW : public QMainWindow
 {
@@ -51,10 +52,8 @@ protected:
     MathOperationList GetEnumValueFromString(const QString& buttonName);
 
     double screenNumber;
-    double firstOperatorNumber;
-    double secondOperatorNumber;
+	std::optional<double> firstOperatorNumber;
 	bool isSecondInputNumber;
-    double operationResult;
     MathOperationList trackOperationButton;
     QMessageBox Box;
 };
