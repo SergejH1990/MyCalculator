@@ -12,6 +12,9 @@ public:
     TaschenrechnerW(QWidget *parent = nullptr);
     ~TaschenrechnerW();
 
+signals:
+	void pressedNumberButton(const int number);
+
 protected:
     enum class MathOperationList
     {
@@ -40,7 +43,7 @@ protected:
     class QPushButton* deleteButton;
     class QPushButton* commaButton;
 
-    void numberButtonPressed();
+	void numberButtonPressed(const int number);
     void singleOutputManipulation();
     void mathematicalOperation();
     void evaluateResult();

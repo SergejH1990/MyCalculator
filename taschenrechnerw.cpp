@@ -1,8 +1,6 @@
 #include "taschenrechnerw.h"
 #include <QVector>
 #include <QtMath>
-#include <QDebug>
-#include <QRegExp>
 #include <QPushButton>
 #include <QLabel>
 #include <QVBoxLayout>
@@ -36,13 +34,15 @@ operationResult(0.0),
 trackOperationButton(MathOperationList::None),
 Box()
 {
-    //Set text of buttons
-    for (int buttonNumber=0; buttonNumber < (int)numberButtons.size(); buttonNumber++)
-    {
-        numberButtons[buttonNumber] = new QPushButton();
-        numberButtons[buttonNumber]->setText(QString::number(buttonNumber));
-        connect(numberButtons[buttonNumber], &QPushButton::released, this, &TaschenrechnerW::numberButtonPressed);
-    }
+	//Set text of buttons
+	for (int buttonNumber = 0; buttonNumber < (int)numberButtons.size(); buttonNumber++)
+	{
+		numberButtons[buttonNumber] = new QPushButton();
+		numberButtons[buttonNumber]->setText(QString::number(buttonNumber));
+		connect(numberButtons[buttonNumber], &QPushButton::clicked, this, [this, buttonNumber](){
+			emit pressedNumberButton(buttonNumber);
+		});
+	}
 
     plusButton->setText("+");
     minusButton->setText("-");
@@ -94,72 +94,62 @@ Box()
     calculatorDisplay->setAlignment(Qt::AlignRight);
     calculatorDisplay->setStyleSheet("QLabel{font-size: 20px; background: yellow;}");
 
-    //connecting output modifications
-    connect(signChangeButton, &QPushButton::released, this, &TaschenrechnerW::singleOutputManipulation);
-    connect(deleteButton, &QPushButton::released, this, &TaschenrechnerW::singleOutputManipulation);
-    connect(commaButton, &QPushButton::released, this, &TaschenrechnerW::singleOutputManipulation);
-    connect(equalButton, &QPushButton::released, this, &TaschenrechnerW::evaluateResult);
+	//connecting output modifications
+	connect(signChangeButton, &QPushButton::clicked, this, &TaschenrechnerW::singleOutputManipulation);
+	connect(deleteButton, &QPushButton::clicked, this, &TaschenrechnerW::singleOutputManipulation);
+	connect(commaButton, &QPushButton::clicked, this, &TaschenrechnerW::singleOutputManipulation);
+	connect(equalButton, &QPushButton::clicked, this, &TaschenrechnerW::evaluateResult);
 
-    //connecting mathematical Operations
-    connect(plusButton, &QPushButton::released, this, &TaschenrechnerW::mathematicalOperation);
-    connect(minusButton, &QPushButton::released, this, &TaschenrechnerW::mathematicalOperation);
-    connect(multiplyButton, &QPushButton::released, this, &TaschenrechnerW::mathematicalOperation);
-    connect(divideButton, &QPushButton::released, this, &TaschenrechnerW::mathematicalOperation);
-
-    plusButton->setCheckable(true);
-    minusButton->setCheckable(true);
-    multiplyButton->setCheckable(true);
-    divideButton->setCheckable(true);
+	//connecting mathematical Operations
+	connect(plusButton, &QPushButton::clicked, this, &TaschenrechnerW::mathematicalOperation);
+	connect(minusButton, &QPushButton::clicked, this, &TaschenrechnerW::mathematicalOperation);
+	connect(multiplyButton, &QPushButton::clicked, this, &TaschenrechnerW::mathematicalOperation);
+	connect(divideButton, &QPushButton::clicked, this, &TaschenrechnerW::mathematicalOperation);
 }
 
 TaschenrechnerW::~TaschenrechnerW()
 {
 }
 
-void TaschenrechnerW::numberButtonPressed()
+void TaschenrechnerW::numberButtonPressed(const int number)
 {
-    QPushButton* button = (QPushButton*)sender();
+	QPushButton* const button = numberButtons[number];
 
-    if((plusButton->isChecked() || minusButton->isChecked() || multiplyButton->isChecked() || divideButton->isChecked()) && !trackfirstInput)
-    {
-         screenNumber = button->text().toDouble();
-         trackfirstInput = true;
-     }
-     else
-     {
-        screenNumber = (calculatorDisplay->text() + button->text()).toDouble();
-     }
+	if(trackOperationButton != MathOperationList::None && !trackfirstInput)
+	{
+		screenNumber = button->text().toDouble();
+		trackfirstInput = true;
+	}
+	else
+	{
+		screenNumber = (calculatorDisplay->text() + button->text()).toDouble();
+	}
 
-     calculatorDisplay->setText(QString::number(screenNumber,'g',15));
+	calculatorDisplay->setText(QString::number(screenNumber,'g',15));
 }
 
 void TaschenrechnerW::singleOutputManipulation()
 {
-    QPushButton* button = (QPushButton*)sender();
+	QPushButton* button = (QPushButton*)sender();
 
-    if(button->text() == "+/-")
-    {
-        screenNumber = -1 * calculatorDisplay->text().toDouble();
-        calculatorDisplay->setText(QString::number(screenNumber,'g',15));
-    }
-    else if(button->text() == "Del")
-    {
-        screenNumber = 0;
-        firstOperatorNumber = 0;
-        secondOperatorNumber = 0;
-        operationResult = 0;
-        calculatorDisplay->setText(QString::number(screenNumber,'g',15));
-        resetButtons();
-    }
-    else if(button->text() == ".")
-    {
-        QRegExp rx("[.]");
-
-        if(-1 == rx.indexIn(calculatorDisplay->text()))
-        {
-            calculatorDisplay->setText(calculatorDisplay->text() + ".");
-        }
-    }
+	if(button->text() == "+/-")
+	{
+		screenNumber = -1 * calculatorDisplay->text().toDouble();
+		calculatorDisplay->setText(QString::number(screenNumber,'g',15));
+	}
+	else if(button->text() == "Del")
+	{
+		screenNumber = 0;
+		firstOperatorNumber = 0;
+		secondOperatorNumber = 0;
+		operationResult = 0;
+		calculatorDisplay->setText(QString::number(screenNumber,'g',15));
+		resetButtons();
+	}
+	else if(button->text() == "." && calculatorDisplay->text().indexOf(".") == -1)
+	{
+		calculatorDisplay->setText(calculatorDisplay->text() + ".");
+	}
 }
 
 void TaschenrechnerW::evaluateResult()
@@ -199,30 +189,28 @@ void TaschenrechnerW::evaluateResult()
 
 void TaschenrechnerW::resetButtons()
 {
-    trackfirstInput = false;
-    trackOperationButton = MathOperationList::None;
-    plusButton->setChecked(false);
-    minusButton->setChecked(false);
-    multiplyButton->setChecked(false);
-    divideButton->setChecked(false);
+	trackfirstInput = false;
+	trackOperationButton = MathOperationList::None;
+	plusButton->setChecked(false);
+	minusButton->setChecked(false);
+	multiplyButton->setChecked(false);
+	divideButton->setChecked(false);
 }
 
 TaschenrechnerW::MathOperationList TaschenrechnerW::GetEnumValueFromString(const QString &buttonName)
 {
-    if (buttonName == "+")
-        return MathOperationList::Plus;
-    else if (buttonName == "-")
-        return MathOperationList::Minus;
-    else if (buttonName == "*")
-        return MathOperationList::Multiply;
-    else if (buttonName == "/")
-        return MathOperationList::Divide;
-    else
-    {
-        Box.setText("No matching mathematical operations found");
-        Box.exec();
-        return MathOperationList::None;
-    }
+	if (buttonName == "+")
+		return MathOperationList::Plus;
+	else if (buttonName == "-")
+		return MathOperationList::Minus;
+	else if (buttonName == "*")
+		return MathOperationList::Multiply;
+	else if (buttonName == "/")
+		return MathOperationList::Divide;
+
+	Box.setText("No matching mathematical operations found");
+	Box.exec();
+	return MathOperationList::None;
 }
 
 void TaschenrechnerW::mathematicalOperation()
