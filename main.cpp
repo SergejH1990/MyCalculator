@@ -6,8 +6,8 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    TaschenrechnerW MyCalculator;
-    MyCalculator.show();
-    return a.exec();
+	QApplication a(argc, argv);
+	TaschenrechnerW MyCalculator;
+	MyCalculator.show();
+	return a.exec();
 }
