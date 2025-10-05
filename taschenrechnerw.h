@@ -32,7 +32,6 @@ protected:
 	void EvaluateResult();
 	MathOperationList GetEnumValueFromString(const QString& buttonName);
 
-	class QWidget* calculatorWidget;
 	class QLabel* calculatorDisplay;
 	QMessageBox Box;
 	class QVBoxLayout* verticalLayout;

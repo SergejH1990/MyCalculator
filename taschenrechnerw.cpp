@@ -7,7 +7,6 @@
 
 //Konstruktor
 TaschenrechnerW::TaschenrechnerW(QWidget *parent): QMainWindow(parent),
-calculatorWidget(new QWidget),
 calculatorDisplay(new QLabel),
 Box(),
 verticalLayout(new QVBoxLayout),
@@ -85,6 +84,7 @@ trackOperationButton(MathOperationList::None)
 	buttonRow4->addWidget(divideButton);
 	buttonRow4->setSpacing(0);
 
+	QWidget* const calculatorWidget = new QWidget;
 	calculatorWidget->setLayout(verticalLayout);
 	setCentralWidget(calculatorWidget);
 
