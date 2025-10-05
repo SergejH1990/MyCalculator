@@ -45,55 +45,55 @@ Box()
 	}
 
 	connect(this, &TaschenrechnerW::pressedNumberButton, this, &TaschenrechnerW::numberButtonPressed);
-    plusButton->setText("+");
-    minusButton->setText("-");
-    multiplyButton->setText("*");
-    divideButton->setText("/");
-    signChangeButton->setText("+/-");
-    equalButton->setText("=");
-    deleteButton->setText("Del");
-    commaButton->setText(".");
+	plusButton->setText("+");
+	minusButton->setText("-");
+	multiplyButton->setText("*");
+	divideButton->setText("/");
+	signChangeButton->setText("+/-");
+	equalButton->setText("=");
+	deleteButton->setText("Del");
+	commaButton->setText(".");
 
-    //Layout of buttons and label
-    verticalLayout->addWidget(calculatorDisplay);
-    verticalLayout->addLayout(buttonRow0);
-    verticalLayout->addLayout(buttonRow1);
-    verticalLayout->addLayout(buttonRow2);
-    verticalLayout->addLayout(buttonRow3);
-    verticalLayout->addLayout(buttonRow4);
-    verticalLayout->setSpacing(0);
+	//Layout of buttons and label
+	verticalLayout->addWidget(calculatorDisplay);
+	verticalLayout->addLayout(buttonRow0);
+	verticalLayout->addLayout(buttonRow1);
+	verticalLayout->addLayout(buttonRow2);
+	verticalLayout->addLayout(buttonRow3);
+	verticalLayout->addLayout(buttonRow4);
+	verticalLayout->setSpacing(0);
 
-    buttonRow0->addWidget(deleteButton);
-    buttonRow0->addWidget(commaButton);
-    buttonRow0->setSpacing(0);
-    buttonRow1->addWidget(numberButtons[1]);
-    buttonRow1->addWidget(numberButtons[2]);
-    buttonRow1->addWidget(numberButtons[3]);
-    buttonRow1->addWidget(plusButton);
-    buttonRow1->setSpacing(0);
-    buttonRow2->addWidget(numberButtons[4]);
-    buttonRow2->addWidget(numberButtons[5]);
-    buttonRow2->addWidget(numberButtons[6]);
-    buttonRow2->addWidget(minusButton);
-    buttonRow2->setSpacing(0);
-    buttonRow3->addWidget(numberButtons[7]);
-    buttonRow3->addWidget(numberButtons[8]);
-    buttonRow3->addWidget(numberButtons[9]);
-    buttonRow3->addWidget(multiplyButton);
-    buttonRow3->setSpacing(0);
-    buttonRow4->addWidget(signChangeButton);
-    buttonRow4->addWidget(numberButtons[0]);
-    buttonRow4->addWidget(equalButton);
-    buttonRow4->addWidget(divideButton);
-    buttonRow4->setSpacing(0);
+	buttonRow0->addWidget(deleteButton);
+	buttonRow0->addWidget(commaButton);
+	buttonRow0->setSpacing(0);
+	buttonRow1->addWidget(numberButtons[1]);
+	buttonRow1->addWidget(numberButtons[2]);
+	buttonRow1->addWidget(numberButtons[3]);
+	buttonRow1->addWidget(plusButton);
+	buttonRow1->setSpacing(0);
+	buttonRow2->addWidget(numberButtons[4]);
+	buttonRow2->addWidget(numberButtons[5]);
+	buttonRow2->addWidget(numberButtons[6]);
+	buttonRow2->addWidget(minusButton);
+	buttonRow2->setSpacing(0);
+	buttonRow3->addWidget(numberButtons[7]);
+	buttonRow3->addWidget(numberButtons[8]);
+	buttonRow3->addWidget(numberButtons[9]);
+	buttonRow3->addWidget(multiplyButton);
+	buttonRow3->setSpacing(0);
+	buttonRow4->addWidget(signChangeButton);
+	buttonRow4->addWidget(numberButtons[0]);
+	buttonRow4->addWidget(equalButton);
+	buttonRow4->addWidget(divideButton);
+	buttonRow4->setSpacing(0);
 
-    calculatorWidget->setLayout(verticalLayout);
-    setCentralWidget(calculatorWidget);
+	calculatorWidget->setLayout(verticalLayout);
+	setCentralWidget(calculatorWidget);
 
-    //Initialize label
-    calculatorDisplay->setText("0");
+	//Initialize label
+	calculatorDisplay->setText("0");
 	calculatorDisplay->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    calculatorDisplay->setStyleSheet("QLabel{font-size: 20px; background: yellow;}");
+	calculatorDisplay->setStyleSheet("QLabel{font-size: 20px; background: yellow;}");
 
 	//connecting output modifications
 	connect(signChangeButton, &QPushButton::clicked, this, &TaschenrechnerW::singleOutputManipulation);
