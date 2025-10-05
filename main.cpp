@@ -1,7 +1,6 @@
 #include "taschenrechnerw.h"
 
 #include <QApplication>
-#include <QtMath>
 #include <QFile>
 
 int main(int argc, char *argv[])

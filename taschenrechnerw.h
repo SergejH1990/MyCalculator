@@ -14,7 +14,7 @@ public:
 	~TaschenrechnerW();
 
 signals:
-	void pressedNumberButton(const int number);
+	void NumberButtonPressed(const int number);
 
 protected:
 	enum class MathOperationList
@@ -26,10 +26,10 @@ protected:
 		Divide
 	};
 
-	void numberButtonPressed(const int number);
-	void singleOutputManipulation();
-	void mathematicalOperation();
-	void evaluateResult();
+	void OnNumberButtonPressed(const int number);
+	void SingleOutputOperation();
+	void MathematicalOperation();
+	void EvaluateResult();
 	MathOperationList GetEnumValueFromString(const QString& buttonName);
 
 	class QWidget* calculatorWidget;
