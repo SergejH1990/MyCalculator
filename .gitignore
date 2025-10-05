@@ -1,0 +1,6 @@
+*.pro.user
+*.pro.user.*
+*.qbs.user
+*.qbs.user.*
+*.pro.qtds
+*.moc
