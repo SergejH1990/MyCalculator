@@ -55,7 +55,8 @@ protected:
 	class QPushButton* deleteButton;
 	class QPushButton* commaButton;
 
-	std::optional<double> screenNumber;
+	bool isOperationStarted;
+	double screenNumber;
 	std::optional<double> firstOperatorNumber;
 	MathOperationList trackOperationButton;
 };
