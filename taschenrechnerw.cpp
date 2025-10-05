@@ -93,7 +93,6 @@ Box()
 	//Initialize label
 	calculatorDisplay->setText("0");
 	calculatorDisplay->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-	calculatorDisplay->setStyleSheet("QLabel{font-size: 20px; background: yellow;}");
 
 	//connecting output modifications
 	connect(signChangeButton, &QPushButton::clicked, this, &TaschenrechnerW::singleOutputManipulation);

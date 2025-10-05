@@ -8,18 +8,18 @@
 
 class TaschenrechnerW : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    TaschenrechnerW(QWidget *parent = nullptr);
-    ~TaschenrechnerW();
+	TaschenrechnerW(QWidget *parent = nullptr);
+	~TaschenrechnerW();
 
 signals:
 	void pressedNumberButton(const int number);
 
 protected:
-    enum class MathOperationList
-    {
-        None,
+	enum class MathOperationList
+	{
+		None,
         Plus,
         Minus,
         Multiply,
