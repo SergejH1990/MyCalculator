@@ -1,13 +1,21 @@
 #include "taschenrechnerw.h"
 
 #include <QApplication>
-#include <QtMath>
-#include <QDebug>
+#include <QFile>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    TaschenrechnerW MyCalculator;
-    MyCalculator.show();
-    return a.exec();
+	QApplication app(argc, argv);
+
+	// Load style sheet from file
+	{
+		QFile File(":/stylesheet.qss");
+		File.open(QFile::ReadOnly);
+		const QString StyleSheet = QLatin1String(File.readAll());
+		app.setStyleSheet(StyleSheet);
+	}
+
+	TaschenrechnerW MyCalculator;
+	MyCalculator.show();
+	return app.exec();
 }
