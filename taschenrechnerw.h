@@ -30,7 +30,6 @@ protected:
 	void singleOutputManipulation();
 	void mathematicalOperation();
 	void evaluateResult();
-	void resetButtons();
 	MathOperationList GetEnumValueFromString(const QString& buttonName);
 
 	class QWidget* calculatorWidget;
@@ -56,9 +55,8 @@ protected:
 	class QPushButton* deleteButton;
 	class QPushButton* commaButton;
 
-	double screenNumber;
+	std::optional<double> screenNumber;
 	std::optional<double> firstOperatorNumber;
-	bool isSecondInputNumber;
 	MathOperationList trackOperationButton;
 };
 #endif // TASCHENRECHNERW_H

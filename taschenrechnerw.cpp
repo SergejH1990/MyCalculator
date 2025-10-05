@@ -11,6 +11,7 @@
 TaschenrechnerW::TaschenrechnerW(QWidget *parent): QMainWindow(parent),
 calculatorWidget(new QWidget),
 calculatorDisplay(new QLabel),
+Box(),
 verticalLayout(new QVBoxLayout),
 buttonRow0(new QHBoxLayout),
 buttonRow1(new QHBoxLayout),
@@ -26,15 +27,13 @@ signChangeButton(new QPushButton),
 equalButton(new QPushButton),
 deleteButton(new QPushButton),
 commaButton(new QPushButton),
-screenNumber(0.0),
-firstOperatorNumber(0.0),
-isSecondInputNumber(false),
-trackOperationButton(MathOperationList::None),
-Box()
+screenNumber(),
+firstOperatorNumber(),
+trackOperationButton(MathOperationList::None)
 {
 	setMinimumSize(100, 300);
 
-	//Set text of buttons
+	// Create number buttons
 	for (int buttonNumber = 0; buttonNumber < (int)numberButtons.size(); buttonNumber++)
 	{
 		numberButtons[buttonNumber] = new QPushButton();
@@ -115,17 +114,16 @@ void TaschenrechnerW::numberButtonPressed(const int number)
 {
 	QPushButton* const button = numberButtons[number];
 
-	if(trackOperationButton != MathOperationList::None && !isSecondInputNumber)
+	if(trackOperationButton != MathOperationList::None && !screenNumber.has_value())
 	{
 		screenNumber = button->text().toDouble();
-		isSecondInputNumber = true;
 	}
 	else
 	{
 		screenNumber = (calculatorDisplay->text() + button->text()).toDouble();
 	}
 
-	calculatorDisplay->setText(QString::number(screenNumber,'g',15));
+	calculatorDisplay->setText(QString::number(screenNumber.value(),'g',15));
 }
 
 void TaschenrechnerW::singleOutputManipulation()
@@ -134,15 +132,16 @@ void TaschenrechnerW::singleOutputManipulation()
 
 	if(button->text() == "+/-")
 	{
-		screenNumber = -1 * calculatorDisplay->text().toDouble();
-		calculatorDisplay->setText(QString::number(screenNumber,'g',15));
+		const double operationNumber = screenNumber.has_value() ? screenNumber.value() : calculatorDisplay->text().toDouble();
+		screenNumber = -1 * operationNumber;
+		calculatorDisplay->setText(QString::number(screenNumber.value(),'g',15));
 	}
 	else if(button->text() == "Del")
 	{
-		screenNumber = 0;
-		firstOperatorNumber = 0;
-		calculatorDisplay->setText(QString::number(screenNumber,'g',15));
-		resetButtons();
+		calculatorDisplay->setText(QString::number(0,'g',15));
+		screenNumber = {};
+		firstOperatorNumber = {};
+		trackOperationButton = MathOperationList::None;
 	}
 	else if(button->text() == "." && calculatorDisplay->text().indexOf(".") == -1)
 	{
@@ -157,24 +156,26 @@ void TaschenrechnerW::evaluateResult()
 		return;
 	}
 
+	const double firstOperationNumber = firstOperatorNumber.value();
+	const double secondOperationNumber = screenNumber.has_value() ? screenNumber.value() : calculatorDisplay->text().toDouble();
 	double operationResult = 0.0;
 	if(trackOperationButton == MathOperationList::Plus)
 	{
-		operationResult = firstOperatorNumber.value() + screenNumber;
+		operationResult = firstOperationNumber + secondOperationNumber;
 	}
 	else if(trackOperationButton == MathOperationList::Minus)
 	{
-		operationResult = firstOperatorNumber.value() - screenNumber;
+		operationResult = firstOperationNumber - secondOperationNumber;
 	}
 	else if(trackOperationButton == MathOperationList::Multiply)
 	{
-		operationResult = firstOperatorNumber.value() * screenNumber;
+		operationResult = firstOperationNumber * secondOperationNumber;
 	}
 	else if(trackOperationButton == MathOperationList::Divide)
 	{
-		if(screenNumber != 0)
+		if(secondOperationNumber != 0)
 		{
-			operationResult = firstOperatorNumber.value() / screenNumber;
+			operationResult = firstOperationNumber / secondOperationNumber;
 		}
 		else
 		{
@@ -185,13 +186,8 @@ void TaschenrechnerW::evaluateResult()
 	}
 
 	calculatorDisplay->setText(QString::number(operationResult,'g',15));
+	screenNumber = {};
 	firstOperatorNumber = operationResult;
-	resetButtons();
-}
-
-void TaschenrechnerW::resetButtons()
-{
-	isSecondInputNumber = false;
 	trackOperationButton = MathOperationList::None;
 }
 
@@ -215,10 +211,13 @@ void TaschenrechnerW::mathematicalOperation()
 {
 	QPushButton* button = (QPushButton*)sender();
 
+	const double firstOperationNumber = firstOperatorNumber.has_value() ? firstOperatorNumber.value() : 0.0;
+	const double secondOperationNumber = screenNumber.has_value() ? screenNumber.value() : calculatorDisplay->text().toDouble();
+	double operationResult  = 0.0;
 	switch (trackOperationButton)
 	{
 	case MathOperationList::None:
-		firstOperatorNumber = calculatorDisplay->text().toDouble();
+		operationResult = secondOperationNumber;
 		break;
 	case MathOperationList::Plus:{
 		if (!firstOperatorNumber.has_value())
@@ -226,9 +225,8 @@ void TaschenrechnerW::mathematicalOperation()
 			return;
 		}
 
-		double operationResult = firstOperatorNumber.value() + screenNumber;
+		operationResult = firstOperationNumber + secondOperationNumber;
 		calculatorDisplay->setText(QString::number(operationResult,'g',15));
-		firstOperatorNumber = operationResult;
 		break;
 		}
 	case MathOperationList::Minus:{
@@ -237,7 +235,7 @@ void TaschenrechnerW::mathematicalOperation()
 			return;
 		}
 
-		double operationResult = firstOperatorNumber.value() - screenNumber;
+		double operationResult = firstOperationNumber - secondOperationNumber;
 		calculatorDisplay->setText(QString::number(operationResult,'g',15));
 		firstOperatorNumber = operationResult;
 		break;
@@ -248,9 +246,8 @@ void TaschenrechnerW::mathematicalOperation()
 			return;
 		}
 
-		double operationResult = firstOperatorNumber.value() * screenNumber;
+		double operationResult = firstOperationNumber * secondOperationNumber;
 		calculatorDisplay->setText(QString::number(operationResult,'g',15));
-		firstOperatorNumber = operationResult;
 		break;
 		}
 	case MathOperationList::Divide:{
@@ -259,11 +256,10 @@ void TaschenrechnerW::mathematicalOperation()
 			return;
 		}
 
-		if(screenNumber != 0)
+		if(secondOperationNumber != 0)
 		{
-			double operationResult = firstOperatorNumber.value() / screenNumber;
+			operationResult = firstOperationNumber / secondOperationNumber;
 			calculatorDisplay->setText(QString::number(operationResult,'g',15));
-			firstOperatorNumber = operationResult;
 		}
 		else
 		{
@@ -275,5 +271,7 @@ void TaschenrechnerW::mathematicalOperation()
 		}
 	}
 
+	firstOperatorNumber = operationResult;
+	screenNumber = {};
 	trackOperationButton = GetEnumValueFromString(button->text());
 }
