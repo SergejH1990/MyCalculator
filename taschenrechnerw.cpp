@@ -156,7 +156,7 @@ void TaschenrechnerW::EvaluateResult()
 	}
 
 	const double firstOperationNumber = firstOperatorNumber.value();
-	double operationResult = 0.0;
+	double operationResult = firstOperationNumber;
 	if(trackOperationButton == MathOperationList::Plus)
 	{
 		operationResult = firstOperationNumber + screenNumber;
